@@ -3,6 +3,7 @@
 #include "InitNode.h"
 #include "RedBlackTree.h"
 #include "CustomAssertions.h"
+#include <CException.h>
 
 Node node1, node2, node5, node10, node15, node12, node6, node11;
 
