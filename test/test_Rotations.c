@@ -290,8 +290,8 @@ void test_leftrightRotation_4_elements(void)
 	leftRightRotate(&root);
 	
 	TEST_ASSERT_EQUAL_PTR(root, &node6);
-	TEST_ASSERT_EQUAL_PTR(node10.left, NULL);
-	TEST_ASSERT_EQUAL_PTR(node10.right, NULL);
+	TEST_ASSERT_EQUAL_PTR(NULL,node10.left);
+	TEST_ASSERT_EQUAL_PTR(NULL,node10.right);
 	TEST_ASSERT_EQUAL_PTR(node1.left, NULL);
 	TEST_ASSERT_EQUAL_PTR(node1.right, NULL);
 	TEST_ASSERT_EQUAL_PTR(node6.right, &node10);

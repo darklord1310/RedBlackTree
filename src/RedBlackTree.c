@@ -26,32 +26,72 @@ void _addRedBlackTree(Node **rootPtr, Node *newNode)
 	if(newNode->data < (*root).data)
 	{
 		_addRedBlackTree(&root->left, newNode);
-		printf("asd\n");
-		changeNodeColor(&(*rootPtr));
+		changeNodeColorWhenDataSmallerThanNode(&(*rootPtr));
 	}
 	else
+    {
 		_addRedBlackTree(&root->right, newNode);
+        changeNodeColorWhenDataLargerThanNode(&(*rootPtr));
+    }
 }
 
 
-void changeNodeColor(Node **nodePtr)
+void changeNodeColorWhenDataSmallerThanNode(Node **nodePtr)
 {
-	printf("%d\n", (*nodePtr)->data);
 	Node *tempnode = *nodePtr;
 	tempnode = tempnode->left;
-	printf("%d\n", tempnode->data);
 	if(tempnode->color == 'r')
 	{
 		if(tempnode->left != NULL)
 		{
 			tempnode = tempnode->left;
-			printf("%d\n", (*nodePtr)->data);
-			printf("%p\n", *nodePtr);
 			if(tempnode->color == 'r')
 			{
 				(*nodePtr)->color = 'r';
 				rightRotate(&(*nodePtr));
 			}
 		}
+        
+        if(tempnode->right != NULL)
+        {
+            tempnode = tempnode->right;
+			if(tempnode->color == 'r')
+			{
+				(*nodePtr)->color = 'r';
+				leftRightRotate(&(*nodePtr));
+			}
+        }
 	}
 }
+
+
+
+void changeNodeColorWhenDataLargerThanNode(Node **nodePtr)
+{
+	Node *tempnode = *nodePtr;
+	tempnode = tempnode->right;
+	if(tempnode->color == 'r')
+	{
+		if(tempnode->right != NULL)
+		{
+			tempnode = tempnode->right;
+			if(tempnode->color == 'r')
+			{
+				(*nodePtr)->color = 'r';
+				leftRotate(&(*nodePtr));
+			}
+		}
+        
+        if(tempnode->left != NULL)
+        {
+            tempnode = tempnode->left;
+			if(tempnode->color == 'r')
+			{
+				(*nodePtr)->color = 'r';
+				rightLeftRotate(&(*nodePtr));
+			}
+        }
+	}
+}
+
+
