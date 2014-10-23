@@ -26,17 +26,17 @@ void _addRedBlackTree(Node **rootPtr, Node *newNode)
 	if(newNode->data < (*root).data)
 	{
 		_addRedBlackTree(&root->left, newNode);
-		changeNodeColorWhenDataSmallerThanNode(&(*rootPtr));
+		maintainTreeStructureWhenDataSmallerThanNode(&(*rootPtr));
 	}
 	else
     {
 		_addRedBlackTree(&root->right, newNode);
-        changeNodeColorWhenDataLargerThanNode(&(*rootPtr));
+        maintainTreeStructureWhenDataLargerThanNode(&(*rootPtr));
     }
 }
 
 
-void changeNodeColorWhenDataSmallerThanNode(Node **nodePtr)
+void maintainTreeStructureWhenDataSmallerThanNode(Node **nodePtr)
 {
 	Node *tempnode = *nodePtr;
 	tempnode = tempnode->left;
@@ -66,7 +66,7 @@ void changeNodeColorWhenDataSmallerThanNode(Node **nodePtr)
 
 
 
-void changeNodeColorWhenDataLargerThanNode(Node **nodePtr)
+void maintainTreeStructureWhenDataLargerThanNode(Node **nodePtr)
 {
 	Node *tempnode = *nodePtr;
 	tempnode = tempnode->right;
@@ -94,4 +94,41 @@ void changeNodeColorWhenDataLargerThanNode(Node **nodePtr)
 	}
 }
 
+
+
+
+Node *delRedBlackTree(Node **rootPtr, Node *delnode)
+{
+    Node *node = _delRedBlackTree(rootPtr, delnode);
+    
+    if( *rootPtr != NULL)
+        (*rootPtr)->color = 'b';
+     
+
+    return node;
+}
+
+
+
+
+Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
+{
+    if( (*rootPtr)->left == NULL  && (*rootPtr)->right == NULL)
+    {
+        if( (*rootPtr)->data == delnode->data)
+        {
+            *rootPtr = NULL;
+            return delnode;
+        }
+        else
+            Throw(ERR_NO_NODE_UNAVAILABLE);
+    }
+
+
+    if ( (*rootPtr)->data <  delnode->data)
+        _delRedBlackTree(&(*rootPtr)->right, delnode);
+    else if ( (*rootPtr)->data >  delnode->data)
+        _delRedBlackTree(&(*rootPtr)->left, delnode);
+    
+}
 

@@ -246,20 +246,20 @@ void test_addRedBlackTree_add_15_to_use_tree_to_another_side_with_root_10(void)
  *	                     /                        /                          /
  *                     1(r)                     1(r)                       1(r)
  */
-void test_addRedBlackTree_4_nodes_add_1_to_tree_with_root_10(void)
-{
-    setNode(&node15, NULL, NULL, 'r');
-    setNode(&node5, NULL, NULL, 'r');
-    setNode(&node1, NULL, NULL, 'r');
-    setNode(&node10, &node5, &node15, 'b');
-    Node *root = &node10;
+// void test_addRedBlackTree_4_nodes_add_1_to_tree_with_root_10(void)
+// {
+    // setNode(&node15, NULL, NULL, 'r');
+    // setNode(&node5, NULL, NULL, 'r');
+    // setNode(&node1, NULL, NULL, 'r');
+    // setNode(&node10, &node5, &node15, 'b');
+    // Node *root = &node10;
 
-    addRedBlackTree(&root, &node1);
+    // addRedBlackTree(&root, &node1);
 
-    TEST_ASSERT_EQUAL_PTR(root, &node10);
-    TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node1);
-    TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node15);
-    TEST_ASSERT_EQUAL_NODE(&node5, &node15, 'r', &node10);
-}
+    // TEST_ASSERT_EQUAL_PTR(root, &node10);
+    // TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node1);
+    // TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'b', &node15);
+    // TEST_ASSERT_EQUAL_NODE(&node5, &node15, 'r', &node10);
+// }
 
 

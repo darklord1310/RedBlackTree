@@ -5,7 +5,9 @@
 
 void addRedBlackTree(Node **rootPtr, Node *newnode);
 void _addRedBlackTree(Node **rootPtr, Node *newNode);
-void changeNodeColorWhenDataSmallerThanNode(Node **nodePtr);
-void changeNodeColorWhenDataLargerThanNode(Node **nodePtr);
+void maintainTreeStructureWhenDataSmallerThanNode(Node **nodePtr);
+void maintainTreeStructureWhenDataLargerThanNode(Node **nodePtr);
+Node *delRedBlackTree(Node **rootPtr, Node *delnode);
+Node *_delRedBlackTree(Node **rootPtr, Node *delnode);
 
 #endif // RedBlackTree_H
