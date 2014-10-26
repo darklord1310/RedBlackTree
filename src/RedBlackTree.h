@@ -9,5 +9,7 @@ void maintainTreeStructureWhenDataSmallerThanNode(Node **nodePtr);
 void maintainTreeStructureWhenDataLargerThanNode(Node **nodePtr);
 Node *delRedBlackTree(Node **rootPtr, Node *delnode);
 Node *_delRedBlackTree(Node **rootPtr, Node *delnode);
+void colorFlippingforDel(Node **rootPtr);
+
 
 #endif // RedBlackTree_H

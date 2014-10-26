@@ -113,6 +113,8 @@ Node *delRedBlackTree(Node **rootPtr, Node *delnode)
 
 Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
 {
+    Node *node;
+    
     if( (*rootPtr)->left == NULL  && (*rootPtr)->right == NULL)
     {
         if( (*rootPtr)->data == delnode->data)
@@ -123,12 +125,30 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
         else
             Throw(ERR_NO_NODE_UNAVAILABLE);
     }
-
+    
+    
 
     if ( (*rootPtr)->data <  delnode->data)
-        _delRedBlackTree(&(*rootPtr)->right, delnode);
-    else if ( (*rootPtr)->data >  delnode->data)
-        _delRedBlackTree(&(*rootPtr)->left, delnode);
+    {
+        node = _delRedBlackTree(&(*rootPtr)->right, delnode);
+        colorFlippingforDel(&(*rootPtr)->left);
+    }
+    else
+    {
+        node = _delRedBlackTree(&(*rootPtr)->left, delnode);
+        colorFlippingforDel(&(*rootPtr)->right);
+    }
     
+    return node;
 }
 
+
+
+void colorFlippingforDel(Node **rootPtr)
+{
+    if( *rootPtr != NULL)
+    {
+        if( (*rootPtr)->color == 'b')
+            (*rootPtr)->color = 'r';
+    }
+}
