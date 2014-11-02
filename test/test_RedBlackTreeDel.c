@@ -6,7 +6,7 @@
 #include "Rotations.h"
 #include <CException.h>
 
-Node node1, node2, node5, node10, node15, node12, node6, node11, node20;
+Node node1, node2, node5, node10, node15, node12, node6, node11, node20, node4;
 
 
 void setUp(void)
@@ -20,7 +20,8 @@ void setUp(void)
 	resetNode(&node11, 11);
 	resetNode(&node2, 2);
     resetNode(&node20, 20);
-}
+    resetNode(&node4, 4);
+}   
 
 void tearDown(void)
 {
@@ -265,7 +266,7 @@ void test_delRedBlackTree_3_all_black_node_remove_2_from_tree_with_root_5_root_s
 
 
 
-/* 
+/* 3 node
  *      root                 root
  *       /     remove 2       /
  *      v      ----->        v
@@ -276,7 +277,7 @@ void test_delRedBlackTree_3_all_black_node_remove_2_from_tree_with_root_5_root_s
  *     6(b)  15(b)         6(r)
  *
  */
-void test_delRedBlackTree_5_node_remove_2_from_tree_with_root_5_root_should_point_to_10()
+void test_delRedBlackTree_3_node_remove_2_from_tree_with_root_5_root_should_point_to_10()
 {
     CEXCEPTION_T err;
     setNode(&node6, NULL, NULL, 'b');
@@ -301,5 +302,81 @@ void test_delRedBlackTree_5_node_remove_2_from_tree_with_root_5_root_should_poin
     }
 }
 
+
+
+
+/* 3 node
+ *      root                 root
+ *       /     remove 6       /
+ *      v      ----->        v
+ *     5(b)                5(b)
+ *    /  \                /   \
+ * 2(b)   10(r)        2(b)    10(b)
+ *       /  \                   \
+ *     6(b)  15(b)              15(r)
+ *
+ */
+void test_delRedBlackTree_3_node_remove_6_from_tree_with_root_5_root_should_point_to_5()
+{
+    CEXCEPTION_T err;
+    setNode(&node6, NULL, NULL, 'b');
+    setNode(&node15, NULL, NULL, 'b');
+    setNode(&node2, NULL, NULL, 'b');
+    setNode(&node10, &node6, &node15, 'r');
+    setNode(&node5, &node2 , &node10,  'b');
+    Node *root = &node5;
+    Node *node;
+    
+    Try{
+        node = delRedBlackTree(&root, &node6);  
+        TEST_ASSERT_EQUAL(6 , node->data);
+        TEST_ASSERT_EQUAL(root->data,5);
+        TEST_ASSERT_EQUAL_NODE(&node2 , &node10, 'b', &node5);
+        TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node2);
+        TEST_ASSERT_EQUAL_NODE(NULL , &node15, 'b', &node10);
+        TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'r', &node15);
+        
+    }Catch(err){
+        TEST_FAIL_MESSAGE("Not Expecting ERR_NODE_UNAVAILABLE to be thrown.");
+    }
+}
+
+
+
+/* 3 node
+ *      root                 root
+ *       /     remove 15      /
+ *      v      ----->        v
+ *     5(b)                5(b)
+ *    /  \                /   \
+ * 2(b)   10(r)        2(b)    10(b)
+ *       /  \                 /
+ *     6(b)  15(b)          6(r)   
+ *
+ */
+void test_delRedBlackTree_3_node_remove_15_from_tree_with_root_5_root_should_point_to_5()
+{
+    CEXCEPTION_T err;
+    setNode(&node6, NULL, NULL, 'b');
+    setNode(&node15, NULL, NULL, 'b');
+    setNode(&node2, NULL, NULL, 'b');
+    setNode(&node10, &node6, &node15, 'r');
+    setNode(&node5, &node2 , &node10,  'b');
+    Node *root = &node5;
+    Node *node;
+    
+    Try{
+        node = delRedBlackTree(&root, &node15);  
+        TEST_ASSERT_EQUAL(15 , node->data);
+        TEST_ASSERT_EQUAL(root->data,5);
+        TEST_ASSERT_EQUAL_NODE(&node2 , &node10, 'b', &node5);
+        TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node2);
+        TEST_ASSERT_EQUAL_NODE(&node6, NULL , 'b', &node10);
+        TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'r', &node6);
+        
+    }Catch(err){
+        TEST_FAIL_MESSAGE("Not Expecting ERR_NODE_UNAVAILABLE to be thrown.");
+    }
+}
 
 

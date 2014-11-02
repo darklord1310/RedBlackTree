@@ -151,8 +151,7 @@ Node *delRedBlackTree(Node **rootPtr, Node *delnode)
 Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
 {
     Node *node;
-    int left;
-    int right;
+    int left,right;
     
     if( (*rootPtr)->left == NULL  && (*rootPtr)->right == NULL)
     {
@@ -165,29 +164,35 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
             Throw(ERR_NO_NODE_UNAVAILABLE);
     }
     
-    
 
     if ( (*rootPtr)->data <  delnode->data)
     {
         node = _delRedBlackTree(&(*rootPtr)->right, delnode);
-        colorFlippingForDel(&(*rootPtr)->left);
+        left = checkNodeColor(&(*rootPtr)->left);
+        right = checkNodeColor(&(*rootPtr)->right);
+        
+        if(left == BLACK && right == RED)
+            colorFlippingForDel(&(*rootPtr)->right);
+        else if(left == BLACK && right == BLACK)
+            colorFlippingForDel(&(*rootPtr)->left);
     }
     else
     {
         left = checkNodeColor(&(*rootPtr)->left);
         right = checkNodeColor(&(*rootPtr)->right);
         
-        if(left == 0 && right == 1)
+        if(left == BLACK && right == RED)
         {
             leftRotate(&(*rootPtr));
+            node = _delRedBlackTree(&(*rootPtr)->left, delnode);
+        }
+        else if(left == BLACK && right == BLACK)
+        {
             node = _delRedBlackTree(&(*rootPtr)->left, delnode);
             colorFlippingForDel(&(*rootPtr)->right);
         }
         else
-        {
             node = _delRedBlackTree(&(*rootPtr)->left, delnode);
-            colorFlippingForDel(&(*rootPtr)->right);
-        }
     }
     
     return node;
@@ -201,6 +206,8 @@ void colorFlippingForDel(Node **rootPtr)
     {
         if( (*rootPtr)->color == 'b')
             (*rootPtr)->color = 'r';
+        else if( (*rootPtr)->color == 'r')
+            (*rootPtr)->color = 'b';
     }
 }
 
