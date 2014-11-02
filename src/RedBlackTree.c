@@ -6,56 +6,89 @@
 void addRedBlackTree(Node **rootPtr, Node *newNode)
 {
 	_addRedBlackTree(rootPtr, newNode);
-	(*rootPtr)->color = 'b';
+    (*rootPtr)->color = 'b';
+}
 
+
+//0 indicate not fournode, 1 indicate fournode
+int identify4node(Node **nodePtr)
+{
+    int left, right;
+        
+    left = checkNodeColor(&(*nodePtr)->left);
+    right = checkNodeColor(&(*nodePtr)->right);
+    
+    if(left == RED && right == RED)
+        return FOUR_NODE;
+    else
+        return NOT_FOUR_NODE;
 }
 
 
 
 void _addRedBlackTree(Node **rootPtr, Node *newNode)
 {
-	Node *root;
-	root = *rootPtr;
-	
-	if(root == NULL)
-	{
+    int indicator;
+    
+	if(*rootPtr == NULL)
+	{  
 		*rootPtr = newNode;
 		return;
 	}
-		
-	if(newNode->data < (*root).data)
+
+	if(newNode->data < (*rootPtr)->data)
 	{
-		_addRedBlackTree(&root->left, newNode);
-		maintainTreeStructureWhenDataSmallerThanNode(&(*rootPtr));
+        indicator = identify4node(rootPtr);
+		_addRedBlackTree(&(*rootPtr)->left, newNode);
+        if(indicator == NOT_FOUR_NODE)
+            checkAndrotateWhenDataSmallerThanNode(rootPtr);
+        else
+        {
+            (*rootPtr)->color = 'r';
+            colorFlippingForAdd(&(*rootPtr)->left);
+            colorFlippingForAdd(&(*rootPtr)->right);
+        }
 	}
 	else
     {
-		_addRedBlackTree(&root->right, newNode);
-        maintainTreeStructureWhenDataLargerThanNode(&(*rootPtr));
+         indicator = identify4node(rootPtr);
+		_addRedBlackTree(&(*rootPtr)->right, newNode);
+        if(indicator == NOT_FOUR_NODE)
+            checkAndrotateWhenDataLargerThanNode(rootPtr);
+        else
+        {
+            (*rootPtr)->color = 'r';
+            colorFlippingForAdd(&(*rootPtr)->left);
+            colorFlippingForAdd(&(*rootPtr)->right);
+        }
     }
 }
 
 
-void maintainTreeStructureWhenDataSmallerThanNode(Node **nodePtr)
+void checkAndrotateWhenDataSmallerThanNode(Node **nodePtr)
 {
 	Node *tempnode = *nodePtr;
-	tempnode = tempnode->left;
-	if(tempnode->color == 'r')
+    int color;
+    
+    if(tempnode->left != NULL)
+        color = checkNodeColor(&tempnode->left);
+ 
+	if(color == RED)
 	{
+        tempnode = tempnode->left;
 		if(tempnode->left != NULL)
 		{
-			tempnode = tempnode->left;
-			if(tempnode->color == 'r')
+            color = checkNodeColor(&tempnode->left);
+			if(color == RED)
 			{
 				(*nodePtr)->color = 'r';
 				rightRotate(&(*nodePtr));
 			}
 		}
-        
-        if(tempnode->right != NULL)
+        else if(tempnode->right != NULL)
         {
-            tempnode = tempnode->right;
-			if(tempnode->color == 'r')
+            color = checkNodeColor(&tempnode->right);
+			if(color == RED)
 			{
 				(*nodePtr)->color = 'r';
 				leftRightRotate(&(*nodePtr));
@@ -66,26 +99,30 @@ void maintainTreeStructureWhenDataSmallerThanNode(Node **nodePtr)
 
 
 
-void maintainTreeStructureWhenDataLargerThanNode(Node **nodePtr)
+void checkAndrotateWhenDataLargerThanNode(Node **nodePtr)
 {
 	Node *tempnode = *nodePtr;
-	tempnode = tempnode->right;
-	if(tempnode->color == 'r')
+    int color;
+    
+    if(tempnode->right != NULL)
+        color = checkNodeColor(&tempnode->right);
+	
+	if(color == RED)
 	{
+        tempnode = tempnode->right;
 		if(tempnode->right != NULL)
 		{
-			tempnode = tempnode->right;
-			if(tempnode->color == 'r')
+			color = checkNodeColor(&tempnode->right);
+			if(color == RED)
 			{
 				(*nodePtr)->color = 'r';
 				leftRotate(&(*nodePtr));
 			}
 		}
-        
-        if(tempnode->left != NULL)
+        else if(tempnode->left != NULL)
         {
-            tempnode = tempnode->left;
-			if(tempnode->color == 'r')
+            color = checkNodeColor(&tempnode->left);
+			if(color == RED)
 			{
 				(*nodePtr)->color = 'r';
 				rightLeftRotate(&(*nodePtr));
@@ -114,6 +151,8 @@ Node *delRedBlackTree(Node **rootPtr, Node *delnode)
 Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
 {
     Node *node;
+    int left;
+    int right;
     
     if( (*rootPtr)->left == NULL  && (*rootPtr)->right == NULL)
     {
@@ -131,12 +170,24 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
     if ( (*rootPtr)->data <  delnode->data)
     {
         node = _delRedBlackTree(&(*rootPtr)->right, delnode);
-        colorFlippingforDel(&(*rootPtr)->left);
+        colorFlippingForDel(&(*rootPtr)->left);
     }
     else
     {
-        node = _delRedBlackTree(&(*rootPtr)->left, delnode);
-        colorFlippingforDel(&(*rootPtr)->right);
+        left = checkNodeColor(&(*rootPtr)->left);
+        right = checkNodeColor(&(*rootPtr)->right);
+        
+        if(left == 0 && right == 1)
+        {
+            leftRotate(&(*rootPtr));
+            node = _delRedBlackTree(&(*rootPtr)->left, delnode);
+            colorFlippingForDel(&(*rootPtr)->right);
+        }
+        else
+        {
+            node = _delRedBlackTree(&(*rootPtr)->left, delnode);
+            colorFlippingForDel(&(*rootPtr)->right);
+        }
     }
     
     return node;
@@ -144,11 +195,35 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
 
 
 
-void colorFlippingforDel(Node **rootPtr)
+void colorFlippingForDel(Node **rootPtr)
 {
     if( *rootPtr != NULL)
     {
         if( (*rootPtr)->color == 'b')
             (*rootPtr)->color = 'r';
+    }
+}
+
+
+
+void colorFlippingForAdd(Node **rootPtr)
+{
+    if( *rootPtr != NULL)
+    {
+        if( (*rootPtr)->color == 'r')
+            (*rootPtr)->color = 'b';
+    }
+}
+
+
+//0 indicate b, 1 indicate r
+int checkNodeColor(Node **rootPtr)
+{
+    if( *rootPtr != NULL)
+    {
+        if( (*rootPtr)->color == 'b')
+            return BLACK;
+        else
+            return RED;
     }
 }
