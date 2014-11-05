@@ -150,8 +150,7 @@ Node *delRedBlackTree(Node **rootPtr, Node *delnode)
 
 Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
 {
-    Node *node;
-    int left,right;
+    Node *node, *travelnode;
     
     if( (*rootPtr)->left == NULL  && (*rootPtr)->right == NULL)
     {
@@ -164,35 +163,49 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
             Throw(ERR_NO_NODE_UNAVAILABLE);
     }
     
-
     if ( (*rootPtr)->data <  delnode->data)
     {
         node = _delRedBlackTree(&(*rootPtr)->right, delnode);
-        left = checkNodeColor(&(*rootPtr)->left);
-        right = checkNodeColor(&(*rootPtr)->right);
-        
-        if(left == BLACK && right == RED)
-            colorFlippingForDel(&(*rootPtr)->right);
-        else if(left == BLACK && right == BLACK)
-            colorFlippingForDel(&(*rootPtr)->left);
+    
+        if((*rootPtr)->right == NULL)
+        {
+            if(checkNodeColor(&(*rootPtr)->left) == BLACK)
+            {
+                colorFlippingForDel(&(*rootPtr)->left);
+                if(checkNodeColor(&(*rootPtr)->left) == RED && checkNodeColor(rootPtr) == RED)
+                    colorFlippingForDel(rootPtr);
+            }
+            if((*rootPtr)->left != NULL)
+                travelnode = (*rootPtr)->left;
+            if( (*rootPtr)->left != NULL && (travelnode->right != NULL || travelnode->left != NULL)     )
+            {
+                rightRotate(&(*rootPtr));
+                if((*rootPtr)->right != NULL)
+                    travelnode = (*rootPtr)->right;
+                colorFlippingForDel(&travelnode->left);
+            } 
+        }
     }
     else
     {
-        left = checkNodeColor(&(*rootPtr)->left);
-        right = checkNodeColor(&(*rootPtr)->right);
-        
-        if(left == BLACK && right == RED)
+        node = _delRedBlackTree(&(*rootPtr)->left, delnode);
+
+        if(checkNodeColor(&(*rootPtr)->right) == BLACK)
+        {
+            colorFlippingForDel(&(*rootPtr)->right);
+            if(checkNodeColor(&(*rootPtr)->right) == RED && checkNodeColor(rootPtr) == RED)
+                colorFlippingForDel(rootPtr);
+        }
+            
+        if((*rootPtr)->right != NULL)
+            travelnode = (*rootPtr)->right;
+        if( (*rootPtr)->left == NULL && (*rootPtr)->right != NULL && (travelnode->right != NULL || travelnode->left != NULL)     )
         {
             leftRotate(&(*rootPtr));
-            node = _delRedBlackTree(&(*rootPtr)->left, delnode);
-        }
-        else if(left == BLACK && right == BLACK)
-        {
-            node = _delRedBlackTree(&(*rootPtr)->left, delnode);
-            colorFlippingForDel(&(*rootPtr)->right);
-        }
-        else
-            node = _delRedBlackTree(&(*rootPtr)->left, delnode);
+            if((*rootPtr)->left != NULL)
+                travelnode = (*rootPtr)->left;
+            colorFlippingForDel(&travelnode->right);
+        } 
     }
     
     return node;
@@ -234,3 +247,5 @@ int checkNodeColor(Node **rootPtr)
             return RED;
     }
 }
+
+

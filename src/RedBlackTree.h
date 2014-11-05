@@ -5,7 +5,7 @@
 
 typedef enum {BLACK, RED} NodeColor;
 typedef enum {NOT_FOUR_NODE, FOUR_NODE} identify4Node;
-
+typedef enum {BLACKRED, BLACKBLACK} bothNodeColor;
 
 void addRedBlackTree(Node **rootPtr, Node *newnode);
 void _addRedBlackTree(Node **rootPtr, Node *newNode);
