@@ -13,12 +13,7 @@ void addRedBlackTree(Node **rootPtr, Node *newNode)
 //0 indicate not fournode, 1 indicate fournode
 int identify4node(Node **nodePtr)
 {
-    int left, right;
-        
-    left = checkNodeColor(&(*nodePtr)->left);
-    right = checkNodeColor(&(*nodePtr)->right);
-    
-    if(left == RED && right == RED)
+    if(checkNodeColor(&(*nodePtr)->right) == RED && checkNodeColor(&(*nodePtr)->left) == RED)
         return FOUR_NODE;
     else
         return NOT_FOUR_NODE;
@@ -40,7 +35,7 @@ void _addRedBlackTree(Node **rootPtr, Node *newNode)
 	{
         indicator = identify4node(rootPtr);
 		_addRedBlackTree(&(*rootPtr)->left, newNode);
-        if(indicator == NOT_FOUR_NODE)
+        if( indicator == NOT_FOUR_NODE)
             checkAndrotateWhenDataSmallerThanNode(rootPtr);
         else
         {
@@ -51,9 +46,9 @@ void _addRedBlackTree(Node **rootPtr, Node *newNode)
 	}
 	else
     {
-         indicator = identify4node(rootPtr);
+        indicator = identify4node(rootPtr);
 		_addRedBlackTree(&(*rootPtr)->right, newNode);
-        if(indicator == NOT_FOUR_NODE)
+        if( indicator == NOT_FOUR_NODE)
             checkAndrotateWhenDataLargerThanNode(rootPtr);
         else
         {
@@ -68,33 +63,30 @@ void _addRedBlackTree(Node **rootPtr, Node *newNode)
 void checkAndrotateWhenDataSmallerThanNode(Node **nodePtr)
 {
 	Node *tempnode = *nodePtr;
-    int color;
     
     if(tempnode->left != NULL)
-        color = checkNodeColor(&tempnode->left);
- 
-	if(color == RED)
-	{
-        tempnode = tempnode->left;
-		if(tempnode->left != NULL)
-		{
-            color = checkNodeColor(&tempnode->left);
-			if(color == RED)
-			{
-				(*nodePtr)->color = 'r';
-				rightRotate(&(*nodePtr));
-			}
-		}
-        else if(tempnode->right != NULL)
+    {
+        if(checkNodeColor(&tempnode->left) == RED)
         {
-            color = checkNodeColor(&tempnode->right);
-			if(color == RED)
-			{
-				(*nodePtr)->color = 'r';
-				leftRightRotate(&(*nodePtr));
-			}
+            tempnode = tempnode->left;
+            if(tempnode->left != NULL)
+            {
+                if(checkNodeColor(&tempnode->left) == RED)
+                {
+                    (*nodePtr)->color = 'r';
+                    rightRotate(&(*nodePtr));
+                }
+            }
+            else if(tempnode->right != NULL)
+            {
+                if(checkNodeColor(&tempnode->right) == RED)
+                {
+                    (*nodePtr)->color = 'r';
+                    leftRightRotate(&(*nodePtr));
+                }
+            }
         }
-	}
+    }
 }
 
 
@@ -102,33 +94,30 @@ void checkAndrotateWhenDataSmallerThanNode(Node **nodePtr)
 void checkAndrotateWhenDataLargerThanNode(Node **nodePtr)
 {
 	Node *tempnode = *nodePtr;
-    int color;
     
     if(tempnode->right != NULL)
-        color = checkNodeColor(&tempnode->right);
-	
-	if(color == RED)
 	{
-        tempnode = tempnode->right;
-		if(tempnode->right != NULL)
-		{
-			color = checkNodeColor(&tempnode->right);
-			if(color == RED)
-			{
-				(*nodePtr)->color = 'r';
-				leftRotate(&(*nodePtr));
-			}
-		}
-        else if(tempnode->left != NULL)
+        if(checkNodeColor(&tempnode->right) == RED)
         {
-            color = checkNodeColor(&tempnode->left);
-			if(color == RED)
-			{
-				(*nodePtr)->color = 'r';
-				rightLeftRotate(&(*nodePtr));
-			}
+            tempnode = tempnode->right;
+            if(tempnode->right != NULL)
+            {
+                if(checkNodeColor(&tempnode->right) == RED)
+                {
+                    (*nodePtr)->color = 'r';
+                    leftRotate(&(*nodePtr));
+                }
+            }
+            else if(tempnode->left != NULL)
+            {
+                if(checkNodeColor(&tempnode->left) == RED)
+                {
+                    (*nodePtr)->color = 'r';
+                    rightLeftRotate(&(*nodePtr));
+                }
+            }
         }
-	}
+    }
 }
 
 
