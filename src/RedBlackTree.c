@@ -123,21 +123,7 @@ void checkAndrotateWhenDataLargerThanNode(Node **nodePtr)
 
 
 
-Node *delRedBlackTree(Node **rootPtr, Node *delnode)
-{
-    Node *node = _delRedBlackTree(rootPtr, delnode);
-    
-    if( *rootPtr != NULL)
-        (*rootPtr)->color = 'b';
-     
-
-    return node;
-}
-
-
-
-
-Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
+Node *_delRedBlackTreeX(Node **rootPtr, Node *delnode)
 {
     Node *node, *travelnode;
     
@@ -154,7 +140,7 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
     
     if ( (*rootPtr)->data <  delnode->data)
     {
-        node = _delRedBlackTree(&(*rootPtr)->right, delnode);
+        node = _delRedBlackTreeX(&(*rootPtr)->right, delnode);
     
         if((*rootPtr)->right == NULL)
         {
@@ -177,7 +163,7 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
     }
     else
     {
-        node = _delRedBlackTree(&(*rootPtr)->left, delnode);
+        node = _delRedBlackTreeX(&(*rootPtr)->left, delnode);
 
         if(checkNodeColor(&(*rootPtr)->right) == BLACK)
         {
@@ -199,6 +185,60 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
     
     return node;
 }
+
+
+
+
+Node *delRedBlackTree(Node **rootPtr, Node *delnode)
+{
+    Node *node = _delRedBlackTree(rootPtr, delnode);
+    
+    if( *rootPtr != NULL)
+        (*rootPtr)->color = 'b';
+
+    return node;
+}
+
+
+
+Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
+{
+    Node *node;
+    
+    if( (*rootPtr)->left == NULL  && (*rootPtr)->right == NULL)
+    {
+        if( (*rootPtr)->data == delnode->data)
+        {
+            *rootPtr = NULL;
+            return delnode;
+        }
+        else
+            Throw(ERR_NO_NODE_UNAVAILABLE);
+    }
+    
+    if ( (*rootPtr)->data <  delnode->data)
+    {
+        node = _delRedBlackTree(&(*rootPtr)->right, delnode);
+        if( (*rootPtr)->right == NULL || (*rootPtr)->right->color == 'd')
+        {
+            int cases = checkCases(&(*rootPtr)->left);
+            executeCasesWhenReturnFromRight(cases, &(*rootPtr));
+        }
+    }
+    else
+    {
+        node = _delRedBlackTree(&(*rootPtr)->left, delnode);
+        if( (*rootPtr)->left == NULL || (*rootPtr)->left->color == 'd')
+        {
+            int cases = checkCases(&(*rootPtr)->right);
+            executeCasesWhenReturnFromLeft(cases, &(*rootPtr));
+        }
+
+    }
+    
+    return node;
+}
+
 
 
 
@@ -235,6 +275,143 @@ int checkNodeColor(Node **rootPtr)
         else
             return RED;
     }
+    else 
+        return BLACK;
+}
+
+void forceNodeColorToRed(Node **rootPtr)
+{
+    (*rootPtr)->color = 'r';
+
 }
 
 
+void forceNodeColorToBlack(Node **rootPtr)
+{
+    (*rootPtr)->color = 'b';
+}
+
+
+
+
+int checkCases(Node **rootPtr)
+{
+    if(IsCase1(&(*rootPtr)) == 1)
+        return case1;
+    else if(IsCase2(&(*rootPtr)) == 1)
+        return case2;
+    else if(IsCase3(&(*rootPtr)) == 1)
+        return case3;
+}
+
+
+int IsCase1(Node **rootPtr)
+{
+    if( (*rootPtr)->color == 'b' && ( checkNodeColor(&(*rootPtr)->right) == RED || checkNodeColor(&(*rootPtr)->left) == RED )   )
+        return 1;
+    else
+        return 0;
+}
+
+
+int IsCase2(Node **rootPtr)
+{    
+    if( (*rootPtr)->color == 'b' && ( (*rootPtr)->left == NULL || (*rootPtr)->right == NULL)   )
+        return 1;
+    else
+        return 0;
+}
+
+
+int IsCase3(Node **rootPtr)
+{    
+    if( (*rootPtr)->color == 'r')
+        return 1;
+    else
+        return 0;
+}
+
+
+
+void executeCasesWhenReturnFromLeft(int cases, Node **rootPtr)
+{
+    if( cases == case1)
+    {
+        if( checkNodeColor(&(*rootPtr)->right->right) == RED)
+        {
+            leftRotate(&(*rootPtr));
+            if( checkNodeColor(&(*rootPtr)->left) == RED)
+                forceNodeColorToRed(&(*rootPtr));
+            else if( checkNodeColor(&(*rootPtr)->left) == BLACK )
+                forceNodeColorToBlack(&(*rootPtr));
+            forceNodeColorToBlack(&(*rootPtr)->left);
+            forceNodeColorToBlack(&(*rootPtr)->right);
+        }
+        else if( checkNodeColor(&(*rootPtr)->right->left) == RED)
+        {
+            rightLeftRotate(&(*rootPtr));
+            if( checkNodeColor(&(*rootPtr)->left) == RED)
+                forceNodeColorToRed(&(*rootPtr));
+            else if( checkNodeColor(&(*rootPtr)->left) == BLACK )
+                forceNodeColorToBlack(&(*rootPtr));
+            forceNodeColorToBlack(&(*rootPtr)->left);
+            forceNodeColorToBlack(&(*rootPtr)->right);
+        }
+    }
+    else if( cases == case2 )
+    {
+        if( (*rootPtr)->color == 'b')
+            (*rootPtr)->color = 'd';
+        else if( (*rootPtr)->color == 'r' )
+            (*rootPtr)->color = 'b';
+        forceNodeColorToRed(&(*rootPtr)->right);
+    }
+    else if( cases == case3 )
+    {
+        leftRotate(&(*rootPtr));
+        forceNodeColorToBlack(&(*rootPtr));
+        forceNodeColorToRed(&(*rootPtr)->left);
+    }
+}
+
+
+void executeCasesWhenReturnFromRight(int cases, Node **rootPtr)
+{
+    if( cases == case1)
+    {
+        if( checkNodeColor(&(*rootPtr)->left->left) == RED)
+        {
+            rightRotate(&(*rootPtr));
+            if( checkNodeColor(&(*rootPtr)->right) == RED)
+                forceNodeColorToRed(&(*rootPtr));
+            else if( checkNodeColor(&(*rootPtr)->right) == BLACK )
+                forceNodeColorToBlack(&(*rootPtr));
+            forceNodeColorToBlack(&(*rootPtr)->left);
+            forceNodeColorToBlack(&(*rootPtr)->right);
+        }
+        else if( checkNodeColor(&(*rootPtr)->left->right) == RED)
+        {
+            leftRightRotate(&(*rootPtr));
+            if( checkNodeColor(&(*rootPtr)->right) == RED)
+                forceNodeColorToRed(&(*rootPtr));
+            else if( checkNodeColor(&(*rootPtr)->right) == BLACK )
+                forceNodeColorToBlack(&(*rootPtr));
+            forceNodeColorToBlack(&(*rootPtr)->left);
+            forceNodeColorToBlack(&(*rootPtr)->right);
+        }
+    }
+    else if( cases == case2 )
+    {
+        if( (*rootPtr)->color == 'b')
+            (*rootPtr)->color = 'd';
+        else if( (*rootPtr)->color == 'r' )
+            (*rootPtr)->color = 'b';
+        forceNodeColorToRed(&(*rootPtr)->left);
+    }
+    else if( cases == case3 )
+    {
+        rightRotate(&(*rootPtr));
+        forceNodeColorToBlack(&(*rootPtr));
+        forceNodeColorToRed(&(*rootPtr)->right);
+    }
+}
