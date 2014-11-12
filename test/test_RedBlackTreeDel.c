@@ -393,7 +393,7 @@ void test_delRedBlackTree_3_node_remove_15_from_tree_with_root_5_root_should_poi
  * 2(b)  7(b)                   7(r)
  *
  */
-void xtest_delRedBlackTree_3_node_remove_15_from_tree_with_root_10_root_should_point_to_6()
+void test_delRedBlackTree_3_node_remove_15_from_tree_with_root_10_root_should_point_to_6()
 {
     CEXCEPTION_T err;
     setNode(&node2, NULL, NULL, 'b');
@@ -814,9 +814,9 @@ void test_delRedBlackTree_3_node_all_black_remove_2_from_tree_with_root_5_color_
  *      v      ----->        v      --------->         v
  *     5(b)                5(r)                       7(b)
  *    /  \               //   \                      /   \
- * 2(b)   7(r)        NULL   7(r)                 5(r)   8(b)
+ * 2(b)   7(r)        NULL   7(r)                 5(b)   8(b)
  *       /  \               /   \                    \
- *    6(b)  8(b)          6(b)  8(b)                 6(b)
+ *    6(b)  8(b)          6(b)  8(b)                 6(r)
  */
 void test_delRedBlackTree_3_node_remove_2_from_tree_with_root_5_root_should_point_to_7()
 {
@@ -832,11 +832,12 @@ void test_delRedBlackTree_3_node_remove_2_from_tree_with_root_5_root_should_poin
     Try{
         node = _delRedBlackTree(&root, &node2);  
         TEST_ASSERT_EQUAL(2 , node->data);
-        TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node6);
         TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node8);
         TEST_ASSERT_EQUAL(7,root->data);
-        TEST_ASSERT_EQUAL_NODE(NULL, &node6 , 'r', &node5);
         TEST_ASSERT_EQUAL_NODE(&node5, &node8 , 'b', &node7);
+        TEST_ASSERT_EQUAL_NODE(NULL, &node6 , 'b', &node5);
+        TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'r', &node6);
+        
     }Catch(err){
         TEST_FAIL_MESSAGE("Not Expecting ERR_NODE_UNAVAILABLE to be thrown.");
     }
@@ -1038,9 +1039,9 @@ void test_delRedBlackTree_3_node_all_black_remove_10_from_tree_with_root_5_color
  *            v      ----->        v      --------->         v
  *           15(b)                15(b)                     5(b)
  *          /  \                /   \\                    /   \
- *       5(r)   20(b)        5(r)   NULL               2(b)   15(r)
+ *       5(r)   20(b)        5(r)   NULL               2(b)   15(b)
  *      /  \                /   \                            /
- *   2(b)  7(b)           2(b)  7(b)                       7(b)
+ *   2(b)  7(b)           2(b)  7(b)                       7(r)
  */
 void test_delRedBlackTree_3_node_remove_20_from_tree_with_root_15_root_should_point_to_5()
 {
@@ -1057,9 +1058,9 @@ void test_delRedBlackTree_3_node_remove_20_from_tree_with_root_15_root_should_po
         node = _delRedBlackTree(&root, &node20);  
         TEST_ASSERT_EQUAL(20 , node->data);
         TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node2);
-        TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node7);
+        TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'r', &node7);
         TEST_ASSERT_EQUAL(root->data,5);
-        TEST_ASSERT_EQUAL_NODE(&node7, NULL, 'r', &node15);
+        TEST_ASSERT_EQUAL_NODE(&node7, NULL, 'b', &node15);
         TEST_ASSERT_EQUAL_NODE(&node2, &node15 , 'b', &node5);
     }Catch(err){
         TEST_FAIL_MESSAGE("Not Expecting ERR_NODE_UNAVAILABLE to be thrown.");

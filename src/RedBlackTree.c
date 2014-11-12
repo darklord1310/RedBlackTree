@@ -203,6 +203,7 @@ Node *delRedBlackTree(Node **rootPtr, Node *delnode)
 Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
 {
     Node *node;
+    int cases;
     
     if( (*rootPtr)->left == NULL  && (*rootPtr)->right == NULL)
     {
@@ -225,7 +226,8 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
             {
                 if((*rootPtr)->right->right == NULL && (*rootPtr)->right->left != NULL)
                 {
-                    RestructureLeftChild(&(*rootPtr)->right);
+                    cases = checkCases(&(*rootPtr)->right->left);
+                    executeCasesWhenReturnFromRight(cases, &(*rootPtr)->right);               
                 }
             }
         }
@@ -240,7 +242,8 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
             {
                 if( ((*rootPtr)->left->left == NULL && (*rootPtr)->left->right != NULL)  )
                 {
-                    RestructureRightChild(&(*rootPtr)->left);
+                    cases = checkCases(&(*rootPtr)->left->right);
+                    executeCasesWhenReturnFromLeft(cases, &(*rootPtr)->left);    
                 }
             }
         }
@@ -265,11 +268,10 @@ void RestructureLeftChild(Node **rootPtr)
 void RestructureRightChild(Node **rootPtr)
 {
     int cases;
-    
-    
+
+    if( (*rootPtr)->right != NULL)
     {
-        if( (*rootPtr)->right != NULL)
-            cases = checkCases(&(*rootPtr)->right);
+        cases = checkCases(&(*rootPtr)->right);
         executeCasesWhenReturnFromLeft(cases, &(*rootPtr));
     }
 }
