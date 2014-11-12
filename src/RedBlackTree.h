@@ -3,9 +3,9 @@
 #include "Node.h"
 
 
-typedef enum {BLACK, RED} NodeColor;
+typedef enum {BLACK, RED, DOUBLEBLACK} NodeColor;
 typedef enum {NOT_FOUR_NODE, FOUR_NODE} identify4Node;
-typedef enum {case1, case2, case3} cases;
+typedef enum {case1, case2, case3, notanycases} cases;
 
 void addRedBlackTree(Node **rootPtr, Node *newnode);
 void _addRedBlackTree(Node **rootPtr, Node *newNode);
@@ -27,5 +27,7 @@ void forceNodeColorToBlack(Node **rootPtr);
 void forceNodeColorToRed(Node **rootPtr);
 void executeCasesWhenReturnFromLeft(int cases, Node **rootPtr);
 void executeCasesWhenReturnFromRight(int cases, Node **rootPtr);
+void RestructureRightChild(Node **rootPtr);
+void RestructureLeftChild(Node **rootPtr);
 
 #endif // RedBlackTree_H
