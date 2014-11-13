@@ -309,8 +309,10 @@ int checkNodeColor(Node **rootPtr)
     {
         if( (*rootPtr)->color == 'b')
             return BLACK;
-        else
+        else if( (*rootPtr)->color == 'r')
             return RED;
+        else 
+            return DOUBLEBLACK;
     }
     else 
         return BLACK;
@@ -339,8 +341,6 @@ int checkCases(Node **rootPtr)
         return case2;
     else if(IsCase3(&(*rootPtr)) == 1)
         return case3;
-    else
-        return notanycases;
 }
 
 
@@ -453,4 +453,15 @@ void executeCasesWhenReturnFromRight(int cases, Node **rootPtr)
         forceNodeColorToBlack(&(*rootPtr));
         forceNodeColorToRed(&(*rootPtr)->right);
     }
+}
+
+
+
+
+Node *removeSuccessor(Node **parentPtr)
+{
+
+
+
+
 }
