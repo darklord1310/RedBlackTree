@@ -740,6 +740,12 @@ void test_delRedBlackTree_3_node_extra_test_case_with_another_side_remove_2_from
     }
 }
 
+
+
+
+
+
+
  
 /* 3 node all black, The sibling is black and both newphews are black
  * Case 2a)
@@ -1055,7 +1061,7 @@ void test_delRedBlackTree_3_node_remove_20_from_tree_with_root_15_root_should_po
     Node *node;
     
     Try{
-        node = _delRedBlackTree(&root, &node20);  
+        node = delRedBlackTree(&root, &node20);  
         TEST_ASSERT_EQUAL(20 , node->data);
         TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node2);
         TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'r', &node7);
@@ -1111,3 +1117,52 @@ void test_delRedBlackTree_3_node_combination_test_remove_20_from_tree_with_root_
         TEST_FAIL_MESSAGE("Not Expecting ERR_NODE_UNAVAILABLE to be thrown.");
     }
 }
+
+
+
+
+/* Remove root test
+ * 
+ *            root                 root        
+ *             /     remove 3       /         
+ *            v      ----->        v         
+ *           3(b)                1(b)                    
+ *          /  \                /   \               
+ *       1(r)   NULL        NULL   NULL             
+ *
+ */
+void xtest_delRedBlackTree_given_2_node_with_root_is_3_remove_3_root_should_point_to_1()
+{
+    CEXCEPTION_T err;
+    setNode(&node1, NULL, NULL, 'r');
+    setNode(&node3, &node1, NULL, 'b');
+    Node *root = &node3;
+    Node *node;
+    
+    Try{
+        node = delRedBlackTree(&root, &node3);  
+        TEST_ASSERT_EQUAL(3 , node->data);
+        TEST_ASSERT_EQUAL(root->data,1);
+        TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node1);
+
+    }Catch(err){
+        TEST_FAIL_MESSAGE("Not Expecting ERR_NODE_UNAVAILABLE to be thrown.");
+    }
+}
+
+
+/* Remove successor
+ * 
+ *            root                 root        
+ *             /     remove 3       /         
+ *            v      ----->        v         
+ *           3(b)                1(b)                    
+ *          /  \                /   \               
+ *       1(r)   NULL        NULL   NULL             
+ *
+ */
+
+
+
+
+

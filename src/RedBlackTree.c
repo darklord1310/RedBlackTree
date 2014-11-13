@@ -205,48 +205,26 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
     Node *node;
     int cases;
     
-    if( (*rootPtr)->left == NULL  && (*rootPtr)->right == NULL)
+    if( (*rootPtr)->data == delnode->data)
     {
-        if( (*rootPtr)->data == delnode->data)
-        {
-            *rootPtr = NULL;
-            return delnode;
-        }
-        else
+        *rootPtr = NULL;
+        return delnode;
+    }
+    else
+    {
+        if( (*rootPtr)->left == NULL  && (*rootPtr)->right == NULL)
             Throw(ERR_NO_NODE_UNAVAILABLE);
     }
     
     if ( (*rootPtr)->data <  delnode->data)
     {
         node = _delRedBlackTree(&(*rootPtr)->right, delnode);
-        if( (*rootPtr)->right == NULL || (*rootPtr)->right->color == 'd')
-        {
-            RestructureLeftChild(&(*rootPtr));
-            if( (*rootPtr)->right != NULL || checkNodeColor(&(*rootPtr)->right) == DOUBLEBLACK)
-            {
-                if((*rootPtr)->right->right == NULL && (*rootPtr)->right->left != NULL)
-                {
-                    cases = checkCases(&(*rootPtr)->right->left);
-                    executeCasesWhenReturnFromRight(cases, &(*rootPtr)->right);               
-                }
-            }
-        }
+        RestructureLeftChild(&(*rootPtr));
     }
     else
     {
         node = _delRedBlackTree(&(*rootPtr)->left, delnode);
-        if( (*rootPtr)->left == NULL || (*rootPtr)->left->color == 'd')
-        {
-            RestructureRightChild(&(*rootPtr));
-            if( (*rootPtr)->left != NULL || checkNodeColor(&(*rootPtr)->left) == DOUBLEBLACK)
-            {
-                if( ((*rootPtr)->left->left == NULL && (*rootPtr)->left->right != NULL)  )
-                {
-                    cases = checkCases(&(*rootPtr)->left->right);
-                    executeCasesWhenReturnFromLeft(cases, &(*rootPtr)->left);    
-                }
-            }
-        }
+        RestructureRightChild(&(*rootPtr));
     }
     return node;
 }
@@ -256,10 +234,22 @@ void RestructureLeftChild(Node **rootPtr)
 {
     int cases;
 
-    if( (*rootPtr)->left != NULL)
+    if( (*rootPtr)->right == NULL || (*rootPtr)->right->color == 'd')
     {
-        cases = checkCases(&(*rootPtr)->left);
-        executeCasesWhenReturnFromRight(cases, &(*rootPtr));
+        if( (*rootPtr)->left != NULL)
+        {
+            cases = checkCases(&(*rootPtr)->left);
+            executeCasesWhenReturnFromRight(cases, &(*rootPtr));
+        }
+            
+        if( (*rootPtr)->right != NULL || checkNodeColor(&(*rootPtr)->right) == DOUBLEBLACK)
+        {
+            if((*rootPtr)->right->right == NULL && (*rootPtr)->right->left != NULL)
+            {
+                cases = checkCases(&(*rootPtr)->right->left);
+                executeCasesWhenReturnFromRight(cases, &(*rootPtr)->right);               
+            }
+        }
     }
 }
 
@@ -268,11 +258,22 @@ void RestructureLeftChild(Node **rootPtr)
 void RestructureRightChild(Node **rootPtr)
 {
     int cases;
-
-    if( (*rootPtr)->right != NULL)
+    if( (*rootPtr)->left == NULL || (*rootPtr)->left->color == 'd')
     {
-        cases = checkCases(&(*rootPtr)->right);
-        executeCasesWhenReturnFromLeft(cases, &(*rootPtr));
+        if( (*rootPtr)->right != NULL)
+        {   
+            cases = checkCases(&(*rootPtr)->right);
+            executeCasesWhenReturnFromLeft(cases, &(*rootPtr));
+        }
+            
+        if( (*rootPtr)->left != NULL || checkNodeColor(&(*rootPtr)->left) == DOUBLEBLACK)
+        {
+            if( ((*rootPtr)->left->left == NULL && (*rootPtr)->left->right != NULL)  )
+            {
+                cases = checkCases(&(*rootPtr)->left->right);
+                executeCasesWhenReturnFromLeft(cases, &(*rootPtr)->left);    
+            }
+        }
     }
 }
 
@@ -460,7 +461,10 @@ void executeCasesWhenReturnFromRight(int cases, Node **rootPtr)
 
 Node *removeSuccessor(Node **parentPtr)
 {
-
+    Node *nodeToRemove;
+    
+    if( (*parentPtr)->right != NULL);
+    
 
 
 
