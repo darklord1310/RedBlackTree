@@ -1121,7 +1121,84 @@ void test_delRedBlackTree_3_node_combination_test_remove_20_from_tree_with_root_
 
 
 
-/* Remove root test
+
+/* test Remove Next Larger Successor
+ * 
+ *        parent left              parent left       
+ *             /     sucessor 3      /         
+ *            v       ----->        v         
+ *           3(b)                4(b)                    
+ *          /  \                /   \               
+ *       NULL  4(r)          NULL   NULL             
+ *
+ */
+void test_removeNextLargerSuccessor_given_3_node_remove_sucessor_3_parent_left_should_point_to_4()
+{
+    setNode(&node4, NULL, NULL, 'r');
+    setNode(&node3, NULL, &node4, 'b');
+    Node *parent = &node3;
+    Node *node;
+
+    node = removeNextLargerSuccessor(&parent);  
+    TEST_ASSERT_EQUAL(3 , node->data);
+    TEST_ASSERT_EQUAL_PTR(&node4, parent);
+    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node4);
+
+}
+
+
+
+
+/* test Remove Next Larger Successor
+ * 
+ *        parent left              parent left       
+ *             /     sucessor 3     //         
+ *            v       ----->        v         
+ *           3(b)                 NULL                   
+ *          /  \                             
+ *       NULL  NULL                       
+ *
+ */
+void test_removeNextLargerSuccessor_given_2_node_remove_sucessor_3_parent_left_should_point_to_NULL()
+{
+    setNode(&node3, NULL, NULL, 'b');
+    Node *parent = &node3;
+    Node *node;
+
+    node = removeNextLargerSuccessor(&parent);  
+    TEST_ASSERT_EQUAL(3 , node->data);
+    TEST_ASSERT_EQUAL_PTR(NULL,parent);
+}
+
+
+
+
+/* test Remove Next Larger Successor
+ * 
+ *        parent left             parent left      
+ *             /     sucessor 3      /         
+ *            v       ----->        v         
+ *           3(r)                  NULL                   
+ *          /  \                             
+ *       NULL  NULL             
+ *
+ */
+void test_removeNextLargerSuccessor_given_2_node_remove_successor_3_parent_left_should_point_to_NULL()
+{
+    setNode(&node3, NULL, NULL, 'r');
+    Node *parent = &node3;
+    Node *node;
+
+    node = removeNextLargerSuccessor(&parent);  
+    TEST_ASSERT_EQUAL(3 , node->data);
+    TEST_ASSERT_EQUAL_PTR(NULL, parent);
+    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node4);
+}
+ 
+ 
+ 
+ 
+ /* Remove root test
  * 
  *            root                 root        
  *             /     remove 3       /         
@@ -1133,36 +1210,13 @@ void test_delRedBlackTree_3_node_combination_test_remove_20_from_tree_with_root_
  */
 void xtest_delRedBlackTree_given_2_node_with_root_is_3_remove_3_root_should_point_to_1()
 {
-    CEXCEPTION_T err;
     setNode(&node1, NULL, NULL, 'r');
     setNode(&node3, &node1, NULL, 'b');
     Node *root = &node3;
     Node *node;
-    
-    Try{
-        node = delRedBlackTree(&root, &node3);  
-        TEST_ASSERT_EQUAL(3 , node->data);
-        TEST_ASSERT_EQUAL(root->data,1);
-        TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node1);
 
-    }Catch(err){
-        TEST_FAIL_MESSAGE("Not Expecting ERR_NODE_UNAVAILABLE to be thrown.");
-    }
+    node = delRedBlackTree(&root, &node3);  
+    TEST_ASSERT_EQUAL(3 , node->data);
+    TEST_ASSERT_EQUAL(root->data,1);
+    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node1);
 }
-
-
-/* Remove successor
- * 
- *            root                 root        
- *             /     remove 3       /         
- *            v      ----->        v         
- *           3(b)                1(b)                    
- *          /  \                /   \               
- *       1(r)   NULL        NULL   NULL             
- *
- */
-
-
-
-
-

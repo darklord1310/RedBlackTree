@@ -459,13 +459,29 @@ void executeCasesWhenReturnFromRight(int cases, Node **rootPtr)
 
 
 
-Node *removeSuccessor(Node **parentPtr)
+Node *removeNextLargerSuccessor(Node **parentPtr)
 {
-    Node *nodeToRemove;
+    Node *successorNode;
     
-    if( (*parentPtr)->right != NULL);
-    
-
-
+    if( (*parentPtr)->left != NULL)
+    {
+        successorNode = removeNextLargerSuccessor(&(*parentPtr)->left);
+    }
+    else
+    {
+        if( (*parentPtr)->right == NULL)
+        {
+            successorNode = *parentPtr;
+            *parentPtr = NULL;
+            return successorNode;
+        }
+        else
+        {
+            successorNode = *parentPtr;
+            *parentPtr = (*parentPtr)->right;
+            forceNodeColorToBlack(&(*parentPtr));
+            return successorNode;
+        }
+    }
 
 }

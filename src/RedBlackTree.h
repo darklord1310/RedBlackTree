@@ -28,6 +28,6 @@ void executeCasesWhenReturnFromLeft(int cases, Node **rootPtr);
 void executeCasesWhenReturnFromRight(int cases, Node **rootPtr);
 void RestructureRightChild(Node **rootPtr);
 void RestructureLeftChild(Node **rootPtr);
-Node *removeSuccessor(Node **parentPtr);
+Node *removeNextLargerSuccessor(Node **parentPtr);
 
 #endif // RedBlackTree_H
