@@ -1196,8 +1196,142 @@ void test_removeNextLargerSuccessor_given_2_node_remove_successor_3_parent_left_
 }
  
  
+
  
- 
+/* test Remove Next Larger Successor
+ * 
+ *           parent                 parent    
+ *             /     sucessor 5       /         
+ *            v       ----->         v         
+ *           12(b)                  12(b)                   
+ *          /  \                       \    
+ *       5(r)  15(r)                   15(r)
+ *
+ */
+void test_removeNextLargerSuccessor_given_3_node_remove_successor_12_parent_should_point_to_12()
+{
+    setNode(&node5, NULL, NULL, 'r');
+    setNode(&node15, NULL, NULL, 'r');
+    setNode(&node12, &node5, &node15, 'r');
+    Node *parent = &node12;
+    Node *node;
+
+    node = removeNextLargerSuccessor(&parent);  
+    TEST_ASSERT_EQUAL(5 , node->data);
+    TEST_ASSERT_EQUAL_PTR(&node12, parent);
+    TEST_ASSERT_EQUAL_NODE(NULL , &node15, 'b', &node12);
+    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'r', &node15);
+}
+
+
+
+/* test Remove Next Larger Successor
+ * 
+ *           parent                 parent    
+ *             /     sucessor 1       /         
+ *            v       ----->         v         
+ *           11(b)                  11(b)                   
+ *          /  \                   /   \    
+ *       5(b)  15(b)             5(b)  15(b)
+ *      /     /                        /
+ *    1(r)   12(r)                   12(r)
+ */
+void xtest_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_11()
+{
+    setNode(&node1, NULL, NULL, 'r');
+    setNode(&node12, NULL, NULL, 'r');
+    setNode(&node5, &node1, NULL, 'b');
+    setNode(&node15, &node12, NULL, 'b');
+    setNode(&node11, &node5, &node15, 'b');
+    Node *parent = &node11;
+    Node *node;
+
+    node = removeNextLargerSuccessor(&parent);  
+    TEST_ASSERT_EQUAL(1 , node->data);
+    TEST_ASSERT_EQUAL_PTR(&node11, parent);
+    TEST_ASSERT_EQUAL_NODE(&node5 , &node15, 'b', &node11);
+    TEST_ASSERT_EQUAL_NODE(&node12 , NULL, 'b', &node11);
+    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'r', &node12);
+}
+
+
+
+
+/* test Remove Next Larger Successor
+ * 
+ *           parent                    parent                        parent 
+ *             /     sucessor 1          /                            //
+ *            v       ----->            v            ------->         v
+ *           10(b)                     10(b)                         10(d)    
+ *         /     \                   //     \                       /     \
+ *       5(b)    15(b)             5(d)     15(b)                5(b)     15(r)
+ *      /  \    /    \                \    /   \                    \    /    \
+ *  1(b)  6(b) 12(b) 20(b)          6(b) 12(b)  20(b)              6(b) 12(b) 20(b)
+ */
+void xtest_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_10()
+{
+    setNode(&node1, NULL, NULL, 'b');
+    setNode(&node6, NULL, NULL, 'b');
+    setNode(&node20, NULL, NULL, 'b');
+    setNode(&node12, NULL, NULL, 'b');
+    setNode(&node5, &node1, &node6, 'b');
+    setNode(&node15, &node12, &node20, 'b');
+    setNode(&node10, &node5, &node15, 'b');
+    Node *parent = &node10;
+    Node *node;
+
+    node = removeNextLargerSuccessor(&parent);  
+    TEST_ASSERT_EQUAL(1 , node->data);
+    TEST_ASSERT_EQUAL_PTR(&node10, parent);
+    TEST_ASSERT_EQUAL_NODE(&node5 , &node15, 'b', &node10);
+    TEST_ASSERT_EQUAL_NODE(&node12 , &node20, 'b', &node15);
+    TEST_ASSERT_EQUAL_NODE(NULL, &node6, 'b', &node5);
+    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node12);
+    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node20);
+    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node6);
+}
+
+
+
+
+/* test Remove Next Larger Successor
+ * 
+ *           parent                    parent                   
+ *             /     sucessor 1          /                        
+ *            v       ----->            v               
+ *           10(b)                     10(b)                       
+ *         /     \                   /     \                 
+ *       5(b)    15(b)             5(d)     15(b)                
+ *      /  \    /    \            /   \    /   \               
+ *  1(b)  6(b) 12(b) 20(b)     2(b)   6(b) 12(b)  20(b)              
+ *     \
+ *    2(r)
+ */
+void xtest_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_10_2_should_more_up()
+{
+    setNode(&node2, NULL, NULL, 'r');
+    setNode(&node6, NULL, NULL, 'b');
+    setNode(&node20, NULL, NULL, 'b');
+    setNode(&node12, NULL, NULL, 'b');
+    setNode(&node1, NULL, &node2, 'b');
+    setNode(&node5, &node1, &node6, 'b');
+    setNode(&node15, &node12, &node20, 'b');
+    setNode(&node10, &node5, &node15, 'b');
+    Node *parent = &node10;
+    Node *node;
+
+    node = removeNextLargerSuccessor(&parent);  
+    TEST_ASSERT_EQUAL(1 , node->data);
+    TEST_ASSERT_EQUAL_PTR(&node10, parent);
+    TEST_ASSERT_EQUAL_NODE(&node5 , &node15, 'b', &node10);
+    TEST_ASSERT_EQUAL_NODE(&node12 , &node20, 'b', &node15);
+    TEST_ASSERT_EQUAL_NODE(&node2, &node6, 'b', &node5);
+    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node12);
+    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node20);
+    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node6);
+}
+
+
  /* Remove root test
  * 
  *            root                 root        

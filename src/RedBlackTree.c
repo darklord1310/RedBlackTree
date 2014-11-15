@@ -265,7 +265,8 @@ void RestructureRightChild(Node **rootPtr)
             cases = checkCases(&(*rootPtr)->right);
             executeCasesWhenReturnFromLeft(cases, &(*rootPtr));
         }
-            
+        
+        //check to see need to restructure again or not
         if( (*rootPtr)->left != NULL || checkNodeColor(&(*rootPtr)->left) == DOUBLEBLACK)
         {
             if( ((*rootPtr)->left->left == NULL && (*rootPtr)->left->right != NULL)  )
@@ -466,6 +467,7 @@ Node *removeNextLargerSuccessor(Node **parentPtr)
     if( (*parentPtr)->left != NULL)
     {
         successorNode = removeNextLargerSuccessor(&(*parentPtr)->left);
+
     }
     else
     {
