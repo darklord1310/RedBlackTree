@@ -163,7 +163,7 @@ void test_delRedBlackTree_4_node_remove_2_from_tree_with_root_5_root_should_poin
     Try{
         node = delRedBlackTree(&root, &node2);  
         TEST_ASSERT_EQUAL(2 , node->data);
-        TEST_ASSERT_EQUAL(root->data,5);
+        TEST_ASSERT_EQUAL(5, root->data);
         TEST_ASSERT_EQUAL_NODE(NULL, &node10, 'b', &node5);
         TEST_ASSERT_EQUAL_NODE(NULL, NULL, 'r', &node10);
     }Catch(err){
@@ -299,7 +299,7 @@ void test_delRedBlackTree_3_node_remove_2_from_tree_with_root_5_root_should_poin
         TEST_ASSERT_EQUAL_NODE(NULL , &node6, 'b', &node5);
         TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'r', &node6);
         TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node15);
-        
+
     }Catch(err){
         TEST_FAIL_MESSAGE("Not Expecting ERR_NODE_UNAVAILABLE to be thrown.");
     }
@@ -409,10 +409,9 @@ void test_delRedBlackTree_3_node_remove_15_from_tree_with_root_10_root_should_po
         TEST_ASSERT_EQUAL(15 , node->data);
         TEST_ASSERT_EQUAL(root->data,6);
         TEST_ASSERT_EQUAL_NODE(&node2 , &node10, 'b', &node6);
-        TEST_ASSERT_EQUAL_NODE(&node7, NULL, 'b', &node10);
         TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'r', &node7);
         TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node2);
-        
+        TEST_ASSERT_EQUAL_NODE(&node7, NULL, 'b', &node10);   
     }Catch(err){
         TEST_FAIL_MESSAGE("Not Expecting ERR_NODE_UNAVAILABLE to be thrown.");
     }
@@ -1212,15 +1211,15 @@ void test_removeNextLargerSuccessor_given_3_node_remove_successor_12_parent_shou
 {
     setNode(&node5, NULL, NULL, 'r');
     setNode(&node15, NULL, NULL, 'r');
-    setNode(&node12, &node5, &node15, 'r');
+    setNode(&node12, &node5, &node15, 'b');
     Node *parent = &node12;
     Node *node;
 
     node = removeNextLargerSuccessor(&parent);  
     TEST_ASSERT_EQUAL(5 , node->data);
     TEST_ASSERT_EQUAL_PTR(&node12, parent);
-    TEST_ASSERT_EQUAL_NODE(NULL , &node15, 'b', &node12);
     TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'r', &node15);
+    TEST_ASSERT_EQUAL_NODE(NULL , &node15, 'b', &node12);
 }
 
 
@@ -1236,7 +1235,7 @@ void test_removeNextLargerSuccessor_given_3_node_remove_successor_12_parent_shou
  *      /     /                        /
  *    1(r)   12(r)                   12(r)
  */
-void xtest_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_11()
+void test_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_11()
 {
     setNode(&node1, NULL, NULL, 'r');
     setNode(&node12, NULL, NULL, 'r');
@@ -1250,7 +1249,7 @@ void xtest_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_1
     TEST_ASSERT_EQUAL(1 , node->data);
     TEST_ASSERT_EQUAL_PTR(&node11, parent);
     TEST_ASSERT_EQUAL_NODE(&node5 , &node15, 'b', &node11);
-    TEST_ASSERT_EQUAL_NODE(&node12 , NULL, 'b', &node11);
+    TEST_ASSERT_EQUAL_NODE(&node12 , NULL, 'b', &node15);
     TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'r', &node12);
 }
 
@@ -1266,9 +1265,9 @@ void xtest_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_1
  *         /     \                   //     \                       /     \
  *       5(b)    15(b)             5(d)     15(b)                5(b)     15(r)
  *      /  \    /    \                \    /   \                    \    /    \
- *  1(b)  6(b) 12(b) 20(b)          6(b) 12(b)  20(b)              6(b) 12(b) 20(b)
+ *  1(b)  6(b) 12(b) 20(b)          6(r) 12(b)  20(b)              6(r) 12(b) 20(b)
  */
-void xtest_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_10()
+void test_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_10()
 {
     setNode(&node1, NULL, NULL, 'b');
     setNode(&node6, NULL, NULL, 'b');
@@ -1283,12 +1282,12 @@ void xtest_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_1
     node = removeNextLargerSuccessor(&parent);  
     TEST_ASSERT_EQUAL(1 , node->data);
     TEST_ASSERT_EQUAL_PTR(&node10, parent);
-    TEST_ASSERT_EQUAL_NODE(&node5 , &node15, 'b', &node10);
-    TEST_ASSERT_EQUAL_NODE(&node12 , &node20, 'b', &node15);
+    TEST_ASSERT_EQUAL_NODE(&node12 , &node20, 'r', &node15);
+    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'r', &node6);
     TEST_ASSERT_EQUAL_NODE(NULL, &node6, 'b', &node5);
     TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node12);
     TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node20);
-    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node6);
+    TEST_ASSERT_EQUAL_NODE(&node5 , &node15, 'd', &node10);
 }
 
 
@@ -1307,7 +1306,7 @@ void xtest_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_1
  *     \
  *    2(r)
  */
-void xtest_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_10_2_should_more_up()
+void test_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_10_2_should_more_up()
 {
     setNode(&node2, NULL, NULL, 'r');
     setNode(&node6, NULL, NULL, 'b');

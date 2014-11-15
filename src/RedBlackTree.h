@@ -17,6 +17,7 @@ Node *_delRedBlackTreeX(Node **rootPtr, Node *delnode);
 void colorFlippingForDel(Node **rootPtr);
 void colorFlippingForAdd(Node **rootPtr);
 int checkNodeColor(Node **rootPtr);
+int isDoubleBlack(Node **rootPtr, Node *removeNode);
 int identify4node(Node **nodePtr);
 int checkCases(Node **rootPtr);
 int IsCase1(Node **rootPtr);
@@ -26,8 +27,8 @@ void forceNodeColorToBlack(Node **rootPtr);
 void forceNodeColorToRed(Node **rootPtr);
 void executeCasesWhenReturnFromLeft(int cases, Node **rootPtr);
 void executeCasesWhenReturnFromRight(int cases, Node **rootPtr);
-void RestructureRightChild(Node **rootPtr);
-void RestructureLeftChild(Node **rootPtr);
+void RestructureRightChild(Node **rootPtr, Node *removedNode);
+void RestructureLeftChild(Node **rootPtr, Node *removedNode);
 Node *removeNextLargerSuccessor(Node **parentPtr);
 
 #endif // RedBlackTree_H

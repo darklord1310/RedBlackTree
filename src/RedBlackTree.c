@@ -20,6 +20,14 @@ int identify4node(Node **nodePtr)
 }
 
 
+void colorFlippingForAdd(Node **rootPtr)
+{
+    if( *rootPtr != NULL)
+    {
+        if( (*rootPtr)->color == 'r')
+            (*rootPtr)->color = 'b';
+    }
+}
 
 void _addRedBlackTree(Node **rootPtr, Node *newNode)
 {
@@ -123,68 +131,80 @@ void checkAndrotateWhenDataLargerThanNode(Node **nodePtr)
 
 
 
-Node *_delRedBlackTreeX(Node **rootPtr, Node *delnode)
-{
-    Node *node, *travelnode;
-    
-    if( (*rootPtr)->left == NULL  && (*rootPtr)->right == NULL)
-    {
-        if( (*rootPtr)->data == delnode->data)
-        {
-            *rootPtr = NULL;
-            return delnode;
-        }
-        else
-            Throw(ERR_NO_NODE_UNAVAILABLE);
-    }
-    
-    if ( (*rootPtr)->data <  delnode->data)
-    {
-        node = _delRedBlackTreeX(&(*rootPtr)->right, delnode);
-    
-        if((*rootPtr)->right == NULL)
-        {
-            if(checkNodeColor(&(*rootPtr)->left) == BLACK)
-            {
-                colorFlippingForDel(&(*rootPtr)->left);
-                if(checkNodeColor(&(*rootPtr)->left) == RED && checkNodeColor(rootPtr) == RED)
-                    colorFlippingForDel(rootPtr);
-            }
-            if((*rootPtr)->left != NULL)
-                travelnode = (*rootPtr)->left;
-            if( (*rootPtr)->left != NULL && (travelnode->right != NULL || travelnode->left != NULL)     )
-            {
-                rightRotate(&(*rootPtr));
-                if((*rootPtr)->right != NULL)
-                    travelnode = (*rootPtr)->right;
-                colorFlippingForDel(&travelnode->left);
-            } 
-        }
-    }
-    else
-    {
-        node = _delRedBlackTreeX(&(*rootPtr)->left, delnode);
+// void colorFlippingForDel(Node **rootPtr)
+// {
+    // if( *rootPtr != NULL)
+    // {
+        // if( (*rootPtr)->color == 'b')
+            // (*rootPtr)->color = 'r';
+        // else if( (*rootPtr)->color == 'r')
+            // (*rootPtr)->color = 'b';
+    // }
+// }
 
-        if(checkNodeColor(&(*rootPtr)->right) == BLACK)
-        {
-            colorFlippingForDel(&(*rootPtr)->right);
-            if(checkNodeColor(&(*rootPtr)->right) == RED && checkNodeColor(rootPtr) == RED)
-                colorFlippingForDel(rootPtr);
-        }
-            
-        if((*rootPtr)->right != NULL)
-            travelnode = (*rootPtr)->right;
-        if( (*rootPtr)->left == NULL && (*rootPtr)->right != NULL && (travelnode->right != NULL || travelnode->left != NULL)     )
-        {
-            leftRotate(&(*rootPtr));
-            if((*rootPtr)->left != NULL)
-                travelnode = (*rootPtr)->left;
-            colorFlippingForDel(&travelnode->right);
-        } 
-    }
+
+// Node *_delRedBlackTreeX(Node **rootPtr, Node *delnode)
+// {
+    // Node *node, *travelnode;
     
-    return node;
-}
+    // if( (*rootPtr)->left == NULL  && (*rootPtr)->right == NULL)
+    // {
+        // if( (*rootPtr)->data == delnode->data)
+        // {
+            // *rootPtr = NULL;
+            // return delnode;
+        // }
+        // else
+            // Throw(ERR_NO_NODE_UNAVAILABLE);
+    // }
+    
+    // if ( (*rootPtr)->data <  delnode->data)
+    // {
+        // node = _delRedBlackTreeX(&(*rootPtr)->right, delnode);
+    
+        // if((*rootPtr)->right == NULL)
+        // {
+            // if(checkNodeColor(&(*rootPtr)->left) == BLACK)
+            // {
+                // colorFlippingForDel(&(*rootPtr)->left);
+                // if(checkNodeColor(&(*rootPtr)->left) == RED && checkNodeColor(rootPtr) == RED)
+                    // colorFlippingForDel(rootPtr);
+            // }
+            // if((*rootPtr)->left != NULL)
+                // travelnode = (*rootPtr)->left;
+            // if( (*rootPtr)->left != NULL && (travelnode->right != NULL || travelnode->left != NULL)     )
+            // {
+                // rightRotate(&(*rootPtr));
+                // if((*rootPtr)->right != NULL)
+                    // travelnode = (*rootPtr)->right;
+                // colorFlippingForDel(&travelnode->left);
+            // } 
+        // }
+    // }
+    // else
+    // {
+        // node = _delRedBlackTreeX(&(*rootPtr)->left, delnode);
+
+        // if(checkNodeColor(&(*rootPtr)->right) == BLACK)
+        // {
+            // colorFlippingForDel(&(*rootPtr)->right);
+            // if(checkNodeColor(&(*rootPtr)->right) == RED && checkNodeColor(rootPtr) == RED)
+                // colorFlippingForDel(rootPtr);
+        // }
+            
+        // if((*rootPtr)->right != NULL)
+            // travelnode = (*rootPtr)->right;
+        // if( (*rootPtr)->left == NULL && (*rootPtr)->right != NULL && (travelnode->right != NULL || travelnode->left != NULL)     )
+        // {
+            // leftRotate(&(*rootPtr));
+            // if((*rootPtr)->left != NULL)
+                // travelnode = (*rootPtr)->left;
+            // colorFlippingForDel(&travelnode->right);
+        // } 
+    // }
+    
+    // return node;
+// }
 
 
 
@@ -219,32 +239,32 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
     if ( (*rootPtr)->data <  delnode->data)
     {
         node = _delRedBlackTree(&(*rootPtr)->right, delnode);
-        RestructureLeftChild(&(*rootPtr));
+        RestructureLeftChild(&(*rootPtr), node);
     }
     else
     {
         node = _delRedBlackTree(&(*rootPtr)->left, delnode);
-        RestructureRightChild(&(*rootPtr));
+        RestructureRightChild(&(*rootPtr), node);
     }
     return node;
 }
 
 
-void RestructureLeftChild(Node **rootPtr)
+void RestructureLeftChild(Node **rootPtr, Node *removedNode)
 {
     int cases;
-
-    if( (*rootPtr)->right == NULL || (*rootPtr)->right->color == 'd')
+    if( isDoubleBlack(&(*rootPtr)->right, removedNode) == DOUBLEBLACK)
     {
         if( (*rootPtr)->left != NULL)
         {
             cases = checkCases(&(*rootPtr)->left);
             executeCasesWhenReturnFromRight(cases, &(*rootPtr));
         }
-            
-        if( (*rootPtr)->right != NULL || checkNodeColor(&(*rootPtr)->right) == DOUBLEBLACK)
+        
+        //check to see need to restructure or not
+        if( (*rootPtr)->right != NULL)
         {
-            if((*rootPtr)->right->right == NULL && (*rootPtr)->right->left != NULL)
+            if( isDoubleBlack(&(*rootPtr)->right->right, removedNode) == DOUBLEBLACK && (*rootPtr)->right->left != NULL)
             {
                 cases = checkCases(&(*rootPtr)->right->left);
                 executeCasesWhenReturnFromRight(cases, &(*rootPtr)->right);               
@@ -255,10 +275,10 @@ void RestructureLeftChild(Node **rootPtr)
 
 
 
-void RestructureRightChild(Node **rootPtr)
+void RestructureRightChild(Node **rootPtr, Node *removedNode)
 {
     int cases;
-    if( (*rootPtr)->left == NULL || (*rootPtr)->left->color == 'd')
+    if( isDoubleBlack(&(*rootPtr)->left, removedNode) == DOUBLEBLACK)
     {
         if( (*rootPtr)->right != NULL)
         {   
@@ -266,10 +286,10 @@ void RestructureRightChild(Node **rootPtr)
             executeCasesWhenReturnFromLeft(cases, &(*rootPtr));
         }
         
-        //check to see need to restructure again or not
-        if( (*rootPtr)->left != NULL || checkNodeColor(&(*rootPtr)->left) == DOUBLEBLACK)
+        //check to see need to restructure or not
+        if( (*rootPtr)->left != NULL)
         {
-            if( ((*rootPtr)->left->left == NULL && (*rootPtr)->left->right != NULL)  )
+            if( isDoubleBlack(&(*rootPtr)->left->left, removedNode) == DOUBLEBLACK && (*rootPtr)->left->right != NULL  )
             {
                 cases = checkCases(&(*rootPtr)->left->right);
                 executeCasesWhenReturnFromLeft(cases, &(*rootPtr)->left);    
@@ -281,29 +301,6 @@ void RestructureRightChild(Node **rootPtr)
 
 
 
-void colorFlippingForDel(Node **rootPtr)
-{
-    if( *rootPtr != NULL)
-    {
-        if( (*rootPtr)->color == 'b')
-            (*rootPtr)->color = 'r';
-        else if( (*rootPtr)->color == 'r')
-            (*rootPtr)->color = 'b';
-    }
-}
-
-
-
-void colorFlippingForAdd(Node **rootPtr)
-{
-    if( *rootPtr != NULL)
-    {
-        if( (*rootPtr)->color == 'r')
-            (*rootPtr)->color = 'b';
-    }
-}
-
-
 //0 indicate b, 1 indicate r
 int checkNodeColor(Node **rootPtr)
 {
@@ -313,17 +310,15 @@ int checkNodeColor(Node **rootPtr)
             return BLACK;
         else if( (*rootPtr)->color == 'r')
             return RED;
-        else 
-            return DOUBLEBLACK;
     }
-    else 
+    else
         return BLACK;
 }
+
 
 void forceNodeColorToRed(Node **rootPtr)
 {
     (*rootPtr)->color = 'r';
-
 }
 
 
@@ -332,6 +327,14 @@ void forceNodeColorToBlack(Node **rootPtr)
     (*rootPtr)->color = 'b';
 }
 
+
+int isDoubleBlack(Node **rootPtr, Node *removeNode)
+{
+    if( (*rootPtr == NULL || (*rootPtr)->color == 'd') && removeNode->color == 'b' )
+        return DOUBLEBLACK;
+    else
+        return 0;
+}
 
 
 
@@ -357,7 +360,7 @@ int IsCase1(Node **rootPtr)
 
 int IsCase2(Node **rootPtr)
 {    
-    if( (*rootPtr)->right == NULL && (*rootPtr)->left == NULL  )
+    if( checkNodeColor(&(*rootPtr)) == BLACK && checkNodeColor(&(*rootPtr)->right) == BLACK && checkNodeColor(&(*rootPtr)->left) == BLACK  )
         return 1;
     else
         return 0;
@@ -467,7 +470,8 @@ Node *removeNextLargerSuccessor(Node **parentPtr)
     if( (*parentPtr)->left != NULL)
     {
         successorNode = removeNextLargerSuccessor(&(*parentPtr)->left);
-
+        RestructureRightChild( &(*parentPtr) , successorNode);
+        return successorNode;
     }
     else
     {
