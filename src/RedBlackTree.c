@@ -227,8 +227,19 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
     
     if( (*rootPtr)->data == delnode->data)
     {
-        *rootPtr = NULL;
-        return delnode;
+        if( (*rootPtr)->left != NULL  ||  (*rootPtr)->right != NULL)
+        {
+            if( (*rootPtr)->right != NULL)
+                *rootPtr = removeNextLargerSuccessor( &(*rootPtr)->right );
+            else
+                *rootPtr = (*rootPtr)->left;
+            return delnode;
+        }
+        else
+        {
+            *rootPtr = NULL;
+            return delnode;
+        }
     }
     else
     {
@@ -409,7 +420,6 @@ void executeCasesWhenReturnFromLeft(int cases, Node **rootPtr)
     }
     else if( cases == case2 )
     {
-        printf("execute case 2\n");
         if( (*rootPtr)->color == 'b')
             (*rootPtr)->color = 'd';
         else if( (*rootPtr)->color == 'r' )
@@ -418,7 +428,6 @@ void executeCasesWhenReturnFromLeft(int cases, Node **rootPtr)
     }
     else if( cases == case3 )
     {
-        printf("execute case3\n");
         leftRotate(&(*rootPtr));
         forceNodeColorToBlack(&(*rootPtr));
         forceNodeColorToRed(&(*rootPtr)->left);

@@ -1279,9 +1279,7 @@ void test_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_10
     Node *parent = &node10;
     Node *node;
     
-    printf("here\n");
     node = removeNextLargerSuccessor(&parent);  
-    printf("end\n");
     TEST_ASSERT_EQUAL(1 , node->data);
     TEST_ASSERT_EQUAL_PTR(&node10, parent);
     TEST_ASSERT_EQUAL_NODE(&node12 , &node20, 'r', &node15);
@@ -1344,15 +1342,20 @@ void test_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_10
  *       1(r)   NULL        NULL   NULL             
  *
  */
-void xtest_delRedBlackTree_given_2_node_with_root_is_3_remove_3_root_should_point_to_1()
+void test_delRedBlackTree_given_2_node_with_root_is_3_remove_3_root_should_point_to_1()
 {
+    CEXCEPTION_T err;
     setNode(&node1, NULL, NULL, 'r');
     setNode(&node3, &node1, NULL, 'b');
     Node *root = &node3;
     Node *node;
 
-    node = delRedBlackTree(&root, &node3);  
-    TEST_ASSERT_EQUAL(3 , node->data);
-    TEST_ASSERT_EQUAL(root->data,1);
-    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node1);
+    Try{
+        node = delRedBlackTree(&root, &node3);  
+        TEST_ASSERT_EQUAL(3 , node->data);
+        TEST_ASSERT_EQUAL_PTR(&node1, root);
+        TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node1);
+    }Catch(err){
+        TEST_FAIL_MESSAGE("Not Expecting ERR_NODE_UNAVAILABLE to be thrown.");
+    }
 }
