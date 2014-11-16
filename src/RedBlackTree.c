@@ -287,13 +287,18 @@ void RestructureRightChild(Node **rootPtr, Node *removedNode)
         }
         
         //check to see need to restructure or not
-        if( (*rootPtr)->left != NULL)
+        if( (*rootPtr)->left != NULL && (*rootPtr)->left->color != 'd')
         {
             if( isDoubleBlack(&(*rootPtr)->left->left, removedNode) == DOUBLEBLACK && (*rootPtr)->left->right != NULL  )
             {
                 cases = checkCases(&(*rootPtr)->left->right);
                 executeCasesWhenReturnFromLeft(cases, &(*rootPtr)->left);    
             }
+        }
+        else if( (*rootPtr)->left != NULL && (*rootPtr)->left->color == 'd')
+        {
+            if( (*rootPtr)->color == 'd')
+                (*rootPtr)->left->color = 'b';     
         }
     }
 }
@@ -404,6 +409,7 @@ void executeCasesWhenReturnFromLeft(int cases, Node **rootPtr)
     }
     else if( cases == case2 )
     {
+        printf("execute case 2\n");
         if( (*rootPtr)->color == 'b')
             (*rootPtr)->color = 'd';
         else if( (*rootPtr)->color == 'r' )
@@ -412,6 +418,7 @@ void executeCasesWhenReturnFromLeft(int cases, Node **rootPtr)
     }
     else if( cases == case3 )
     {
+        printf("execute case3\n");
         leftRotate(&(*rootPtr));
         forceNodeColorToBlack(&(*rootPtr));
         forceNodeColorToRed(&(*rootPtr)->left);

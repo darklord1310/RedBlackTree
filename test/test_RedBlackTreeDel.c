@@ -1259,7 +1259,7 @@ void test_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_11
 /* test Remove Next Larger Successor
  * 
  *           parent                    parent                        parent 
- *             /     sucessor 1          /                            //
+ *             /     successor 1          /                            //
  *            v       ----->            v            ------->         v
  *           10(b)                     10(b)                         10(d)    
  *         /     \                   //     \                       /     \
@@ -1278,16 +1278,19 @@ void test_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_10
     setNode(&node10, &node5, &node15, 'b');
     Node *parent = &node10;
     Node *node;
-
+    
+    printf("here\n");
     node = removeNextLargerSuccessor(&parent);  
+    printf("end\n");
     TEST_ASSERT_EQUAL(1 , node->data);
     TEST_ASSERT_EQUAL_PTR(&node10, parent);
     TEST_ASSERT_EQUAL_NODE(&node12 , &node20, 'r', &node15);
-    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'r', &node6);
-    TEST_ASSERT_EQUAL_NODE(NULL, &node6, 'b', &node5);
     TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node12);
     TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'b', &node20);
+    TEST_ASSERT_EQUAL_NODE(NULL , NULL, 'r', &node6);
     TEST_ASSERT_EQUAL_NODE(&node5 , &node15, 'd', &node10);
+    TEST_ASSERT_EQUAL_NODE(NULL, &node6, 'b', &node5);
+    
 }
 
 
@@ -1302,7 +1305,7 @@ void test_removeNextLargerSuccessor_remove_successor_1_parent_should_point_to_10
  *         /     \                   /     \                 
  *       5(b)    15(b)             5(d)     15(b)                
  *      /  \    /    \            /   \    /   \               
- *  1(b)  6(b) 12(b) 20(b)     2(b)   6(b) 12(b)  20(b)              
+ *  1(b)  6(b) 12(b) 20(b)     2(b) 6(b) 12(b) 20(b)              
  *     \
  *    2(r)
  */
