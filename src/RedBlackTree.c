@@ -232,8 +232,12 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
             if( (*rootPtr)->right != NULL)
             {
                 temp = (*rootPtr)->left;
+                printf("find successor\n");
                 *rootPtr = removeNextLargerSuccessor( &(*rootPtr)->right );
+                printf("sucessor : %d\n", (*rootPtr)->data);
                 (*rootPtr)->left = temp;
+                printf("root left : %d\n", (*rootPtr)->left->data);
+                RestructureLeftChild(&(*rootPtr), (*rootPtr) );
             }
             else
                 *rootPtr = (*rootPtr)->left;
@@ -254,6 +258,7 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
     if ( (*rootPtr)->data <  delnode->data)
     {
         node = _delRedBlackTree(&(*rootPtr)->right, delnode);
+        printf("restructure\n");
         RestructureLeftChild(&(*rootPtr), node);
     }
     else
@@ -268,16 +273,20 @@ Node *_delRedBlackTree(Node **rootPtr, Node *delnode)
 void RestructureLeftChild(Node **rootPtr, Node *removedNode)
 {
     int cases;
+            printf("asd\n");
+        if( (*rootPtr)->right != NULL)
+            printf("root right : %c\n", (*rootPtr)->right->color);
     if( isDoubleBlack(&(*rootPtr)->right, removedNode) == DOUBLEBLACK)
     {
         if( (*rootPtr)->left != NULL)
         {
             cases = checkCases(&(*rootPtr)->left);
+            printf("cases :%d\n", cases); 
             executeCasesWhenReturnFromRight(cases, &(*rootPtr));
         }
         
         //check to see need to restructure or not
-        if( (*rootPtr)->right != NULL)
+        if( (*rootPtr)->right != NULL && (*rootPtr)->right->color != 'd')
         {
             if( isDoubleBlack(&(*rootPtr)->right->right, removedNode) == DOUBLEBLACK && (*rootPtr)->right->left != NULL)
             {
@@ -285,6 +294,9 @@ void RestructureLeftChild(Node **rootPtr, Node *removedNode)
                 executeCasesWhenReturnFromRight(cases, &(*rootPtr)->right);               
             }
         }
+        
+        if( (*rootPtr)->right != NULL && (*rootPtr)->right->color == 'd')
+            (*rootPtr)->right->color = 'b';
     }
 }
 
@@ -441,6 +453,7 @@ void executeCasesWhenReturnFromRight(int cases, Node **rootPtr)
 {
     if( cases == case1)
     {
+        printf("case1\n");
         if( checkNodeColor(&(*rootPtr)->left->left) == RED)
         {
             rightRotate(&(*rootPtr));
@@ -463,7 +476,7 @@ void executeCasesWhenReturnFromRight(int cases, Node **rootPtr)
         }
     }
     else if( cases == case2 )
-    {
+    {   printf("case2\n");
         if( (*rootPtr)->color == 'b')
             (*rootPtr)->color = 'd';
         else if( (*rootPtr)->color == 'r' )
@@ -472,6 +485,7 @@ void executeCasesWhenReturnFromRight(int cases, Node **rootPtr)
     }
     else if( cases == case3 )
     {
+        printf("case3\n");
         rightRotate(&(*rootPtr));
         forceNodeColorToBlack(&(*rootPtr));
         forceNodeColorToRed(&(*rootPtr)->right);
